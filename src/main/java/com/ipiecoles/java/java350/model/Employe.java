@@ -6,6 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.InputMismatchException;
 import java.util.Objects;
 
 @Entity
@@ -134,7 +135,16 @@ public class Employe {
     }
 
     //Augmenter salaire
-    //public void augmenterSalaire(double pourcentage){}
+    public void augmenterSalaire(double pourcentage) {
+        if(pourcentage > 0) {
+            if(salaire !=null ) {
+                salaire = Math.round( (Math.abs(salaire) * 1.25) * 100.00 ) / 100.00;
+            }
+            else salaire = 0.0;
+        }
+        else
+            throw new InputMismatchException("Impossible de d'augmenter négativement un salaire !");
+    }
 
     public Long getId() {
         return id;
