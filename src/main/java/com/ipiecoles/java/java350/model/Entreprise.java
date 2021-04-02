@@ -15,7 +15,7 @@ public final class Entreprise {
     private static final double PRIME_BASE = 1000d;
 
     public static final Map<NiveauEtude, Double> COEFF_SALAIRE_ETUDES = new EnumMap<>(NiveauEtude.class);
-    private static final Map<Integer, LocalDate> datePaque = new HashMap<>();
+    //private static final Map<Integer, LocalDate> datePaque = new HashMap<>();
 
     private Entreprise() {
 
@@ -30,7 +30,7 @@ public final class Entreprise {
         COEFF_SALAIRE_ETUDES.put(NiveauEtude.INGENIEUR, 1.6);
         COEFF_SALAIRE_ETUDES.put(NiveauEtude.DOCTORAT, 1.7);
 
-        datePaque.put(2019, LocalDate.of(2019, 4, 21));
+        /*datePaque.put(2019, LocalDate.of(2019, 4, 21));
         datePaque.put(2020, LocalDate.of(2020, 4, 12));
         datePaque.put(2021, LocalDate.of(2021, 4, 4));
         datePaque.put(2022, LocalDate.of(2022, 4, 17));
@@ -51,7 +51,7 @@ public final class Entreprise {
         datePaque.put(2037, LocalDate.of(2037, 4, 5));
         datePaque.put(2038, LocalDate.of(2038, 4, 25));
         datePaque.put(2039, LocalDate.of(2039, 4, 10));
-        datePaque.put(2040, LocalDate.of(2040, 4, 1));
+        datePaque.put(2040, LocalDate.of(2040, 4, 1));*/
     }
 
     public static final String MATRICULE_INITIAL = "00000";
@@ -145,21 +145,21 @@ public final class Entreprise {
     }
 
     public static List<LocalDate> joursFeries(LocalDate now){
-        LocalDate datePaque = getPaquesDate(now.getYear());
+        LocalDate paquesDate = getPaquesDate(now.getYear());
 
         return Arrays.asList(
                 // 1er janvier	Jour de l’an
                 LocalDate.of(now.getYear(), 1,1),
                 // Lendemain du dimanche de Pâques.	Lundi de Pâques
-                datePaque.plusDays(1L),
+                paquesDate.plusDays(1L),
                 // 1er mai	Fête du Travail
                 LocalDate.of(now.getYear(), 5,1),
                 // 8 mai Fête de la Victoire
                 LocalDate.of(now.getYear(), 5,8),
                 // Jeudi 40 jours après Pâques Ascension Fête chrétienne célébrant la montée de Jésus aux cieux.
-                datePaque.plusDays(40L),
+                paquesDate.plusDays(40L),
                 // Le lundi suivant le dimanche de Pentecôte (le septième après Pâques).
-                datePaque.plusDays(50L),
+                paquesDate.plusDays(50L),
                 // 14 juillet Fête nationale
                 LocalDate.of(now.getYear(), 7,14),
                 // 15 août Assomption

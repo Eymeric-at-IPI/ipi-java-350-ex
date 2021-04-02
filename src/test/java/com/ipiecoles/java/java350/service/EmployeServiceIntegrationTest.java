@@ -11,6 +11,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -61,4 +63,49 @@ public class EmployeServiceIntegrationTest {
         //1521.22 * 1.2 * 1.0
         Assertions.assertThat(Math.round(employe.getSalaire() * 100.0) / 100.0).isEqualTo(1825.46);
     }
+
+    @ParameterizedTest()
+    @CsvSource({//270
+            //matricule,    caTraite,   objectifCa,     currentPerf,    expectedPerf
+            "'C12345',      9000,       10000,          5,              3",
+            "'C12345',      1000,       1000,           30,             30",
+            "'C12345',      12000,      10000,          50,             51",
+            "'C12345',      14000,      10000,          10,             14",
+    })
+    void testCalculPerformanceCommercialAllCase(String _matricule, Long _caTraite, Long _objectifCa, Integer _currentPerf, Integer _expectedPerf) throws EmployeException{
+        //Given
+        populateDBWithCommercialWithPerformance("C00001", 10);
+        populateDBWithCommercialWithPerformance("C00002", 30);
+        populateDBWithCommercialWithPerformance("C00003", 80);
+        populateDBWithCommercialWithPerformance("C00004", 150);
+
+        Employe employe = new Employe();
+        employe.setNom("Doe");
+        employe.setPrenom("Jhon");
+        employe.setSalaire(2000.00);
+        employe.setMatricule(_matricule);
+        employe.setDateEmbauche(LocalDate.now());
+        employe.setPerformance(_currentPerf);
+
+        employeRepository.save(employe);
+
+        //When
+        employeService.calculPerformanceCommercial(_matricule, _caTraite, _objectifCa);
+        employe = this.employeRepository.findByMatricule(_matricule);
+
+        //Then
+        Assertions.assertThat(employe.getPerformance()).isEqualTo(_expectedPerf);
+    }
+
+    void populateDBWithCommercialWithPerformance(String _matricule, int _performance) {
+        Employe employe = new Employe();
+        employe.setNom("Doe");
+        employe.setPrenom("Jhon");
+        employe.setMatricule(_matricule);
+        employe.setPerformance(_performance);
+        employe.setDateEmbauche(LocalDate.now());
+
+        employeRepository.save(employe);
+    }
+
 }

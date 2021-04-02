@@ -6,7 +6,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.InputMismatchException;
 import java.util.Objects;
 
@@ -47,7 +46,7 @@ public class Employe {
 
     /**
      * Méthode calculant le nombre d'années d'ancienneté à partir de la date d'embauche
-     * @return
+     * @return nombre d'année(s) (int)
      */
     public Integer getNombreAnneeAnciennete() {
         int nbAnnee = 0;
@@ -118,7 +117,7 @@ public class Employe {
     public Double getPrimeAnnuelle(){
         //Calcule de la prime d'ancienneté
         Double primeAnciennete = Entreprise.PRIME_ANCIENNETE * this.getNombreAnneeAnciennete();
-        Double prime;
+        double prime;
         //Prime du manager (matricule commençant par M) : Prime annuelle de base multipliée par l'indice prime manager
         //plus la prime d'anciennté.
         if(matricule != null && matricule.startsWith("M")) {
