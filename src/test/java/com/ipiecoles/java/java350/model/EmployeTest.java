@@ -123,15 +123,6 @@ public class EmployeTest {
         Assertions.assertThat(prime).isEqualTo(primeAnnuelle);
     }
 
-    /*
-    Test augmenter salaire :
-        - salaire exist ?
-        - salaire augment ?
-        - invalid percentage
-        - salaire == 0
-        - salaire < 0
-     */
-
     @Test
     public void testAugmenterSalaireWhenSalaireIsNull() {
         //Given
@@ -195,4 +186,24 @@ public class EmployeTest {
         Assertions.assertThat(employe.getSalaire()).isEqualTo(1250.00);
     }
 
+    @ParameterizedTest(name = "En {0} une personne qui travail {1} unité de temps a le droit à {2} RTT")
+    @CsvSource({
+            "2019, 0, 0",   // ceil( 365 - 218 - (104 + 1) - 25 - 10 ) x 0
+            "2019, 0.5, 4", // ceil( 365 - 218 - (104 + 1) - 25 - 10 ) x 0.5
+            "2019, 1, 7",   // ceil( 365 - 218 - (104 + 1) - 25 - 10 ) x 1
+            "2021, 1, 10",  // ceil( 365 - 218 - (104 + 1) - 25 - 7 ) x 1
+            "2022, 0.5, 5", // ceil( 365 - 218 - (104 + 1) - 25 - 7 ) x 0.5
+            "2032, 2, 22"   // ceil( 366 - 218 - (104 + 1) - 25 - 7 ) x 2
+    })
+    void testGetNbRtt(int _yearToCheck, double _tempsPartiel, int _expectedRtt) {
+        // Given
+        Employe employe = new Employe();
+        employe.setTempsPartiel(_tempsPartiel);
+
+        // When
+        int nbRtt = employe.getNbRtt(LocalDate.of(_yearToCheck,1, 1));
+
+        // Then
+        Assertions.assertThat(nbRtt).isEqualTo(_expectedRtt);
+    }
 }

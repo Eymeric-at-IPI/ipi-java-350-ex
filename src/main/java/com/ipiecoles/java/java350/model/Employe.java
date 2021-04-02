@@ -6,6 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.InputMismatchException;
 import java.util.Objects;
 
@@ -73,30 +74,32 @@ public class Employe {
         return getNbRtt(LocalDate.now());
     }
 
-    public Integer getNbRtt(LocalDate _year){
-        int nbOfDayThisYear = _year.isLeapYear() ? 366 : 365;
-        int nbOfWeekInAYear = 104;
+    public Integer getNbRtt(LocalDate _date){
+        int nbOfDayThisYear = _date.isLeapYear() ? 366 : 365;
+        int nbOfWeekPerYear = 52;
+        int nbOfWeekEndDay = nbOfWeekPerYear * 2;
 
-        switch (LocalDate.of(_year.getYear(),1,1).getDayOfWeek()) {
+        switch (LocalDate.of(_date.getYear(),1,1).getDayOfWeek()){
             case THURSDAY:
-                if(_year.isLeapYear()) nbOfWeekInAYear++;
+                if(_date.isLeapYear())
+                    nbOfWeekEndDay ++;
                 break;
-
             case FRIDAY:
-                nbOfWeekInAYear++;
-                if(_year.isLeapYear()) nbOfWeekInAYear++;
+                if(_date.isLeapYear())
+                    nbOfWeekEndDay += 2;
+                else
+                    nbOfWeekEndDay ++;
                 break;
-
             default:
-                nbOfWeekInAYear++;
+                nbOfWeekEndDay ++;
                 break;
         }
 
-        int nbDayOff = (int) Entreprise.joursFeries(_year).stream().filter( localDate ->
+        int nbUsableDayOff = (int) Entreprise.joursFeries(_date).stream().filter( localDate ->
                 localDate.getDayOfWeek().getValue() <= DayOfWeek.FRIDAY.getValue()
         ).count();
 
-        return (int) Math.ceil((nbOfDayThisYear - Entreprise.NB_JOURS_MAX_FORFAIT - nbOfWeekInAYear - Entreprise.NB_CONGES_BASE - nbDayOff) * tempsPartiel);
+        return (int) Math.ceil((nbOfDayThisYear - Entreprise.NB_JOURS_MAX_FORFAIT - nbOfWeekEndDay - Entreprise.NB_CONGES_BASE - nbUsableDayOff) * tempsPartiel);
     }
 
     /**
