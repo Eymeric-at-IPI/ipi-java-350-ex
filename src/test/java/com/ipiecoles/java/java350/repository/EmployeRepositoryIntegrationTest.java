@@ -16,7 +16,7 @@ import java.time.LocalDate;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class EmployeRepositoryIntegrationTest {
+class EmployeRepositoryIntegrationTest {
 
     @Autowired
     EmployeRepository employeRepository;
@@ -60,30 +60,6 @@ public class EmployeRepositoryIntegrationTest {
 
         //Then
         Assertions.assertThat(avgActual).isEqualTo(_expectedAvgPerf);
-    }
-
-    void insertSomeCommercialInTheDatabase(){
-        populateDBWithEmployeWithMatriculeAndPerformance("C12345", 15);
-        populateDBWithEmployeWithMatriculeAndPerformance("C12346", 76);
-        populateDBWithEmployeWithMatriculeAndPerformance("C12347", 400);
-        populateDBWithEmployeWithMatriculeAndPerformance("C12348", 13);
-        populateDBWithEmployeWithMatriculeAndPerformance("C12349", 9);
-    }
-
-    void insertSomeTechnicienInTheDatabase(){
-        populateDBWithEmployeWithMatriculeAndPerformance("T12345", 32);
-        populateDBWithEmployeWithMatriculeAndPerformance("T12346", 60);
-        populateDBWithEmployeWithMatriculeAndPerformance("T12347", 1);
-        populateDBWithEmployeWithMatriculeAndPerformance("T12348", 3);
-        populateDBWithEmployeWithMatriculeAndPerformance("T12349", 9);
-    }
-
-    void insertSomeManagerInTheDatabase(){
-        populateDBWithEmployeWithMatriculeAndPerformance("M12345", 5);
-        populateDBWithEmployeWithMatriculeAndPerformance("M12346", 8);
-        populateDBWithEmployeWithMatriculeAndPerformance("M12347", 4);
-        populateDBWithEmployeWithMatriculeAndPerformance("M12348", 378);
-        populateDBWithEmployeWithMatriculeAndPerformance("M12349", 98);
     }
 
     void populateDBWithEmployeWithMatriculeAndPerformance(String _matricule, int _performance) {

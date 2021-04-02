@@ -104,7 +104,7 @@ public class EmployeTest {
             "2, 'M12345', 0, 1.0, 1700.0",
             "2, 'M12345', 8, 1.0, 2500.0"
     })
-    public void testGetPrimeAnnuelle(Integer performance, String matricule, Long nbYearsAnciennete, Double tempsPartiel, Double primeAnnuelle){
+    void testGetPrimeAnnuelle(Integer performance, String matricule, Long nbYearsAnciennete, Double tempsPartiel, Double primeAnnuelle){
         //Given
         Employe employe = new Employe(
                 "Doe",
@@ -124,7 +124,7 @@ public class EmployeTest {
     }
 
     @Test
-    public void testAugmenterSalaireWhenSalaireIsNull() {
+    void testAugmenterSalaireWhenSalaireIsNull() {
         //Given
         Employe employe = new Employe("Doe","Jhon","T12345",LocalDate.now(),null,1,1.0);
 
@@ -137,7 +137,7 @@ public class EmployeTest {
     }
 
     @Test
-    public void testAugmenterSalaireIsComputingWell() {
+    void testAugmenterSalaireIsComputingWell() {
         //Given
         Employe employe = new Employe("Doe","Jhon","T12345",LocalDate.now(),1000.00,1,1.0);
 
@@ -150,7 +150,7 @@ public class EmployeTest {
     }
 
     @Test
-    public void testAugmenterSalaireWhenNegativeAugmentation() {
+    void testAugmenterSalaireWhenNegativeAugmentation() {
         //Given
         Employe employe = new Employe("Doe","Jhon","T12345",LocalDate.now(),1000.00,1,1.0);
 
@@ -162,7 +162,7 @@ public class EmployeTest {
     }
 
     @Test
-    public void testAugmenterSalaireWhenSalaireIsZero() {
+    void testAugmenterSalaireWhenSalaireIsZero() {
         //Given
         Employe employe = new Employe("Doe","Jhon","T12345",LocalDate.now(),0.00,1,1.0);
 
@@ -174,7 +174,7 @@ public class EmployeTest {
     }
 
     @Test
-    public void testAugmenterSalaireWhenSalaireIsNegative() {
+    void testAugmenterSalaireWhenSalaireIsNegative() {
         //Given
         Employe employe = new Employe("Doe","Jhon","T12345",LocalDate.now(),-1000.00,1,1.0);
 
