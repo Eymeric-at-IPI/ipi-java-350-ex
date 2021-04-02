@@ -85,6 +85,7 @@ public final class Entreprise {
         return LocalDate.of(_year, m, j + 1);
     }
 
+    /*
     /**
      * Retourne si un jours est férié ou non
      * Crédit : adiGuba sur https://www.developpez.net/forums/d1607647/java/general-java/api-standards-tierces/collection-stream/savoir-jour-ferie/
@@ -92,6 +93,7 @@ public final class Entreprise {
      * @param _date à tester
      * @return True if is férié, False if not
      */
+    /*
     public static boolean isFerie(LocalDate _date) {
         final int day = _date.getDayOfMonth();
 
@@ -139,6 +141,7 @@ public final class Entreprise {
 
         return false;
     }
+    */
 
     public static Double primeAnnuelleBase() {
         return PRIME_BASE;
