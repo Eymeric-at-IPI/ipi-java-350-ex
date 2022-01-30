@@ -6,6 +6,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.time.LocalDate;
+import java.util.InputMismatchException;
 
 public class EmployeTest {
 
@@ -53,7 +54,6 @@ public class EmployeTest {
     @Test
     void testGetNombreAnneeAncienneteWhenDateEmbaucheIsNow() {
         // Given
-        int years = 10;
         Employe employe = new Employe();
         employe.setDateEmbauche(LocalDate.now());
 
@@ -104,7 +104,7 @@ public class EmployeTest {
             "2, 'M12345', 0, 1.0, 1700.0",
             "2, 'M12345', 8, 1.0, 2500.0"
     })
-    public void testGetPrimeAnnuelle(Integer performance, String matricule, Long nbYearsAnciennete, Double tempsPartiel, Double primeAnnuelle){
+    void testGetPrimeAnnuelle(Integer performance, String matricule, Long nbYearsAnciennete, Double tempsPartiel, Double primeAnnuelle){
         //Given
         Employe employe = new Employe(
                 "Doe",
@@ -121,5 +121,89 @@ public class EmployeTest {
 
         //Then
         Assertions.assertThat(prime).isEqualTo(primeAnnuelle);
+    }
+
+    @Test
+    void testAugmenterSalaireWhenSalaireIsNull() {
+        //Given
+        Employe employe = new Employe("Doe","Jhon","T12345",LocalDate.now(),null,1,1.0);
+
+        //When
+        employe.augmenterSalaire(25.0);
+
+        //Then
+        // 1000.00 * 1.25 = 1250.00
+        Assertions.assertThat(employe.getSalaire()).isZero();
+    }
+
+    @Test
+    void testAugmenterSalaireIsComputingWell() {
+        //Given
+        Employe employe = new Employe("Doe","Jhon","T12345",LocalDate.now(),1000.00,1,1.0);
+
+        //When
+        employe.augmenterSalaire(25.0);
+
+        //Then
+        // 1000.00 * 1.25 = 1250.00
+        Assertions.assertThat(employe.getSalaire()).isEqualTo(1250.00);
+    }
+
+    @Test
+    void testAugmenterSalaireWhenNegativeAugmentation() {
+        //Given
+        Employe employe = new Employe("Doe","Jhon","T12345",LocalDate.now(),1000.00,1,1.0);
+
+        //When
+        Assertions.assertThatThrownBy(() -> employe.augmenterSalaire(-25.0))
+                //Then
+                .isInstanceOf(InputMismatchException.class)
+                .hasMessage("Impossible de d'augmenter négativement un salaire !");
+    }
+
+    @Test
+    void testAugmenterSalaireWhenSalaireIsZero() {
+        //Given
+        Employe employe = new Employe("Doe","Jhon","T12345",LocalDate.now(),0.00,1,1.0);
+
+        //When
+        employe.augmenterSalaire(25.0);
+
+        //Then
+        Assertions.assertThat(employe.getSalaire()).isZero();
+    }
+
+    @Test
+    void testAugmenterSalaireWhenSalaireIsNegative() {
+        //Given
+        Employe employe = new Employe("Doe","Jhon","T12345",LocalDate.now(),-1000.00,1,1.0);
+
+        //When
+        employe.augmenterSalaire(25.0);
+
+        //Then
+        // |salaire| * augmentation = 1000 * 1.25
+        Assertions.assertThat(employe.getSalaire()).isEqualTo(1250.00);
+    }
+
+    @ParameterizedTest(name = "En {0} une personne qui travail {1} unité de temps a le droit à {2} RTT")
+    @CsvSource({
+            "2019, 0, 0",   // ceil( 365 - 218 - (104 + 1) - 25 - 10 ) x 0
+            "2019, 0.5, 4", // ceil( 365 - 218 - (104 + 1) - 25 - 10 ) x 0.5
+            "2019, 1, 7",   // ceil( 365 - 218 - (104 + 1) - 25 - 10 ) x 1
+            "2021, 1, 10",  // ceil( 365 - 218 - (104 + 1) - 25 - 7 ) x 1
+            "2022, 0.5, 5", // ceil( 365 - 218 - (104 + 1) - 25 - 7 ) x 0.5
+            "2032, 2, 22"   // ceil( 366 - 218 - (104 + 1) - 25 - 7 ) x 2
+    })
+    void testGetNbRtt(int _yearToCheck, double _tempsPartiel, int _expectedRtt) {
+        // Given
+        Employe employe = new Employe();
+        employe.setTempsPartiel(_tempsPartiel);
+
+        // When
+        int nbRtt = employe.getNbRtt(LocalDate.of(_yearToCheck,1, 1));
+
+        // Then
+        Assertions.assertThat(nbRtt).isEqualTo(_expectedRtt);
     }
 }

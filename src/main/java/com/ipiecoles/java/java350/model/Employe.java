@@ -6,6 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.InputMismatchException;
 import java.util.Objects;
 
 @Entity
@@ -45,7 +46,7 @@ public class Employe {
 
     /**
      * Méthode calculant le nombre d'années d'ancienneté à partir de la date d'embauche
-     * @return
+     * @return nombre d'année(s) (int)
      */
     public Integer getNombreAnneeAnciennete() {
         int nbAnnee = 0;
@@ -72,30 +73,32 @@ public class Employe {
         return getNbRtt(LocalDate.now());
     }
 
-    public Integer getNbRtt(LocalDate _year){
-        int nbOfDayThisYear = _year.isLeapYear() ? 366 : 365;
-        int nbOfWeekInAYear = 104;
+    public Integer getNbRtt(LocalDate _date){
+        int nbOfDayThisYear = _date.isLeapYear() ? 366 : 365;
+        int nbOfWeekPerYear = 52;
+        int nbOfWeekEndDay = nbOfWeekPerYear * 2;
 
-        switch (LocalDate.of(_year.getYear(),1,1).getDayOfWeek()) {
+        switch (LocalDate.of(_date.getYear(),1,1).getDayOfWeek()){
             case THURSDAY:
-                if(_year.isLeapYear()) nbOfWeekInAYear++;
+                if(_date.isLeapYear())
+                    nbOfWeekEndDay ++;
                 break;
-
             case FRIDAY:
-                nbOfWeekInAYear++;
-                if(_year.isLeapYear()) nbOfWeekInAYear++;
+                if(_date.isLeapYear())
+                    nbOfWeekEndDay += 2;
+                else
+                    nbOfWeekEndDay ++;
                 break;
-
             default:
-                nbOfWeekInAYear++;
+                nbOfWeekEndDay ++;
                 break;
         }
 
-        int nbDayOff = (int) Entreprise.joursFeries(_year).stream().filter( localDate ->
+        int nbUsableDayOff = (int) Entreprise.joursFeries(_date).stream().filter( localDate ->
                 localDate.getDayOfWeek().getValue() <= DayOfWeek.FRIDAY.getValue()
         ).count();
 
-        return (int) Math.ceil((nbOfDayThisYear - Entreprise.NB_JOURS_MAX_FORFAIT - nbOfWeekInAYear - Entreprise.NB_CONGES_BASE - nbDayOff) * tempsPartiel);
+        return (int) Math.ceil((nbOfDayThisYear - Entreprise.NB_JOURS_MAX_FORFAIT - nbOfWeekEndDay - Entreprise.NB_CONGES_BASE - nbUsableDayOff) * tempsPartiel);
     }
 
     /**
@@ -114,7 +117,7 @@ public class Employe {
     public Double getPrimeAnnuelle(){
         //Calcule de la prime d'ancienneté
         Double primeAnciennete = Entreprise.PRIME_ANCIENNETE * this.getNombreAnneeAnciennete();
-        Double prime;
+        double prime;
         //Prime du manager (matricule commençant par M) : Prime annuelle de base multipliée par l'indice prime manager
         //plus la prime d'anciennté.
         if(matricule != null && matricule.startsWith("M")) {
@@ -134,7 +137,16 @@ public class Employe {
     }
 
     //Augmenter salaire
-    //public void augmenterSalaire(double pourcentage){}
+    public void augmenterSalaire(double pourcentage) {
+        if(pourcentage > 0) {
+            if(salaire !=null ) {
+                salaire = Math.round( (Math.abs(salaire) * 1.25) * 100.00 ) / 100.00;
+            }
+            else salaire = 0.0;
+        }
+        else
+            throw new InputMismatchException("Impossible de d'augmenter négativement un salaire !");
+    }
 
     public Long getId() {
         return id;

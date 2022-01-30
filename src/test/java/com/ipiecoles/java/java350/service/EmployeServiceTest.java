@@ -99,4 +99,52 @@ public class EmployeServiceTest {
                 .hasMessageStartingWith("L'employé de matricule")
                 .hasMessageEndingWith("existe déjà en BDD");
     }
+
+    @ParameterizedTest(name = "Pour un caTraite de {1} et un objectCa de {2} la performance attendue est : {5}")
+    @CsvSource({
+            //  matricule,  _caTraite,  _objectifCa,    _currentPerf,   _avgPerf,  _expectedPerf
+            "'C12345',  9000,       10000,          4,              2,          2",
+            "'C12345',  14000,      10000,          40,             38,         45",
+            "'C12345',  1000,       1000,           30,             16,         31",
+            "'C12345',  12000,      10000,          6,              7,          7",
+            "'C12345',  9000,       10000,          4,              16,         2",
+            "'C12345',  1000,       1000,           30,             80,         30",
+            "'C12345',  9000,       10000,          22,             2,          21",
+            "'C12345',  1000,       1000,           30,             30,         30",
+            "'C12345',  12000,      10000,          80,             90,         81",
+            "'C12345',  14000,      10000,          120,            8,          125",
+            "'C12345',  12000,      10000,          80,             8,          82",
+            "'C12345',  14000,      10000,          2,              38,         6",
+            "'C12345',  9000,       10000,          -22,            2,          1",
+            "'C12345',  12000,      10000,          -16,            9,          -15",
+            "'C12345',  9000,       10000,          -22,            -33,        2",
+            "'C12345',  1000,       1000,           -5,             6,          1",
+            "'C12345',  9000,       10000,          22,             -18,        21",
+            "'C12345',  1000,       1000,           -5,             -7,         2",
+            "'C12345',  12000,      10000,          -16,            -2,         -15",
+            "'C12345',  14000,      10000,          -1,             -6,         4",
+            "'C12345',  14000,      10000,          2,              -15,        7",
+            "'C12345',  14000,      10000,          -2,             1,          3",
+            "'C12345',  1000,       1000,           5,              -9,         6",
+            "'C12345',  12000,      10000,          16,             -28,        18",
+    })
+    void testCalculPerformanceCommercial(String _matricule, Long _caTraite, Long _objectifCa, int _currentPerf, Double _avgPerf, int _expectedPerf) throws EmployeException{
+        //Given
+        Employe employe = new Employe();
+        employe.setMatricule(_matricule);
+        employe.setPerformance(_currentPerf);
+        when(employeRepository.findByMatricule(any(String.class)))
+                .thenReturn(employe);
+        when(employeRepository.avgPerformanceWhereMatriculeStartsWith("C"))
+                .thenReturn(_avgPerf);
+        when(employeRepository.save(any(Employe.class)))
+                .thenReturn(employe);
+
+        //When
+        employeService.calculPerformanceCommercial(_matricule, _caTraite, _objectifCa);
+
+        //Then
+        Assertions.assertThat(employe.getPerformance())
+                .isEqualTo(_expectedPerf);
+    }
 }
