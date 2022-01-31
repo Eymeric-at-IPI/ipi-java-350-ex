@@ -45,21 +45,25 @@ public class Employe {
 
     /**
      * Méthode calculant le nombre d'années d'ancienneté à partir de la date d'embauche
-     * @return
+     * @return int
      */
     public Integer getNombreAnneeAnciennete() {
         int nbAnnee = 0;
         LocalDate now = LocalDate.now();
 
-        if(this.dateEmbauche != null)
+        if(this.dateEmbauche != null) {
             nbAnnee = Math.max(0, now.getYear() - dateEmbauche.getYear());
+        }
 
-        if(nbAnnee == 1)
-            if(now.getMonth().getValue() < dateEmbauche.getMonth().getValue())
+        if(nbAnnee == 1) {
+            if (now.getMonth().getValue() < dateEmbauche.getMonth().getValue()) {
                 nbAnnee = 0;
-            else
-                if(now.getDayOfMonth() < dateEmbauche.getDayOfMonth())
+            } else {
+                if (now.getDayOfMonth() < dateEmbauche.getDayOfMonth()) {
                     nbAnnee = 0;
+                }
+            }
+        }
 
         return nbAnnee;
     }
@@ -73,7 +77,7 @@ public class Employe {
     }
 
     public Integer getNbRtt(LocalDate _year){
-        int nbOfDayThisYear = _year.isLeapYear() ? 366 : 365;
+        final int nbOfDayThisYear = _year.isLeapYear() ? 366 : 365;
         int nbOfWeekInAYear = 104;
 
         switch (LocalDate.of(_year.getYear(),1,1).getDayOfWeek()) {
@@ -86,8 +90,11 @@ public class Employe {
                 if(_year.isLeapYear()) nbOfWeekInAYear++;
                 break;
 
-            default:
+            case SATURDAY:
                 nbOfWeekInAYear++;
+                break;
+
+            default:
                 break;
         }
 
@@ -113,8 +120,8 @@ public class Employe {
     //Matricule, performance, date d'embauche, temps partiel, prime
     public Double getPrimeAnnuelle(){
         //Calcule de la prime d'ancienneté
-        Double primeAnciennete = Entreprise.PRIME_ANCIENNETE * this.getNombreAnneeAnciennete();
-        Double prime;
+        double primeAnciennete = Entreprise.PRIME_ANCIENNETE * this.getNombreAnneeAnciennete();
+        double prime;
         //Prime du manager (matricule commençant par M) : Prime annuelle de base multipliée par l'indice prime manager
         //plus la prime d'anciennté.
         if(matricule != null && matricule.startsWith("M")) {
@@ -133,8 +140,18 @@ public class Employe {
         return prime * this.tempsPartiel;
     }
 
-    //Augmenter salaire
-    //public void augmenterSalaire(double pourcentage){}
+    /**
+     * Augmente le salaire via le pourcentage passé en paramètre, si le salaire est défini.
+     *
+     * Méthode écrite de manière TDD. Dans ce cas trivial, aucun avantage ressenti.
+     * Pour une méthode plus complexe le concept semble robuste.
+     *
+     * @param pourcentage double
+     */
+    public void augmenterSalaire(double pourcentage){
+        if(this.salaire != null)
+            this.salaire *= (pourcentage+100)/100;
+    }
 
     public Long getId() {
         return id;

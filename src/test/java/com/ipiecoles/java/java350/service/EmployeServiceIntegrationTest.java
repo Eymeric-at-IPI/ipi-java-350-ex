@@ -14,7 +14,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import javax.persistence.EntityExistsException;
 import java.time.LocalDate;
 
 @ExtendWith(SpringExtension.class)
@@ -32,6 +34,8 @@ public class EmployeServiceIntegrationTest {
     public void setup() {
         employeRepository.deleteAll();
     }
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmployeService.class);
 
     @Test
     public void testIntegrationEmbaucheEmploye() throws EmployeException {
@@ -61,4 +65,5 @@ public class EmployeServiceIntegrationTest {
         //1521.22 * 1.2 * 1.0
         Assertions.assertThat(Math.round(employe.getSalaire() * 100.0) / 100.0).isEqualTo(1825.46);
     }
+
 }
