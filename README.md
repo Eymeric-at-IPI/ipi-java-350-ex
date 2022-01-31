@@ -26,7 +26,7 @@ Répondre de nouveau aux questions. Qu'est-ce qui a changé ?
    3.	Analyser la configuration proposée et faites-y des modifications si nécessaires
    4.	Cliquer ensuite sur le bouton **Start Commit**
    5.	Constater l'ajout du workflow dans l'onglet **Actions** et regarder le statut du build
-   6. Après chaque exercice, vérifier que le build passe toujours...
+   6.   Après chaque exercice, vérifier que le build passe toujours...
  
 ## Evaluation de la qualité
 
@@ -39,8 +39,8 @@ Répondre de nouveau aux questions. Qu'est-ce qui a changé ?
    7.	Créer le token puis le récupérer en le copiant
    8.	Suivre la procédure recommandée pour paramétrer l'analyse avec les actions Github
    9.	Modifier le workflow de build pour y ajouter l'analyse du code par Sonar
-   10. Analyser le premier rapport de Sonar
-
+   10.  Analyser le premier rapport de Sonar
+   
 
 ## Tests unitaires
 
