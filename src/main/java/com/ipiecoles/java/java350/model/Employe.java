@@ -51,15 +51,19 @@ public class Employe {
         int nbAnnee = 0;
         LocalDate now = LocalDate.now();
 
-        if(this.dateEmbauche != null)
+        if(this.dateEmbauche != null) {
             nbAnnee = Math.max(0, now.getYear() - dateEmbauche.getYear());
+        }
 
-        if(nbAnnee == 1)
-            if(now.getMonth().getValue() < dateEmbauche.getMonth().getValue())
+        if(nbAnnee == 1) {
+            if (now.getMonth().getValue() < dateEmbauche.getMonth().getValue()) {
                 nbAnnee = 0;
-            else
-                if(now.getDayOfMonth() < dateEmbauche.getDayOfMonth())
+            } else {
+                if (now.getDayOfMonth() < dateEmbauche.getDayOfMonth()) {
                     nbAnnee = 0;
+                }
+            }
+        }
 
         return nbAnnee;
     }
@@ -137,7 +141,7 @@ public class Employe {
     }
 
     /**
-     * Augmente le salire via les pourcentga epassé en paramètre
+     * Augmente le salaire via le pourcentage passé en paramètre, si le salaire est défini.
      *
      * Méthode écrite de manière TDD. Dans ce cas trivial, aucun avantage ressenti.
      * Pour une méthode plus complexe le concept semble robuste.
